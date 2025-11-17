@@ -1,8 +1,18 @@
 ﻿using System.Collections;
 using System.Diagnostics;
-public enum NodesType{
-    Equidistant,Chebyshev,Random
+
+var eqNodes = new Nodes(-1, 1, 5, NodesType.Equidistant);
+foreach (var node in eqNodes)
+{
+    Console.WriteLine(node);
 }
+
+Console.WriteLine(eqNodes[3]);
+
+public enum NodesType{
+    Equidistant, Chebyshev, Random
+}
+
 public class Nodes : IReadOnlyCollection<double>
 {
     double _left;
@@ -11,7 +21,7 @@ public class Nodes : IReadOnlyCollection<double>
     NodesType _type;
     public int Count => _count;
 
-    public Nodes(double left,double right, int count,NodesType type)
+    public Nodes(double left, double right, int count, NodesType type)
     {
         if(left >= right)
         {
@@ -56,5 +66,22 @@ public class Nodes : IReadOnlyCollection<double>
     IEnumerator IEnumerable.GetEnumerator()
     {
         return GetEnumerator();
+    }
+
+    public double this[int index]
+    {
+        get
+        {
+            var i = 0;
+            if (index < 0 || index >= _count)
+            {
+                throw new ArgumentException("Указан неверный индекс");
+            } 
+            foreach(var elem in this)
+            {
+                if (i++ == index) return elem;
+            }
+            return Double.NaN;
+        }
     }
 }
